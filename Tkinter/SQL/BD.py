@@ -7,7 +7,7 @@ def conectar_db():
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="admin",
+            password="",
             database="Jujuy"
         )
         mycursor = mydb.cursor()
@@ -15,9 +15,26 @@ def conectar_db():
     except mysql.connector.Error as error:
         print(f"Error al conectar a la base de datos: {error}")
 
+def registrar_usuario(nombre_usuario, contrasena_hasheada, rol):
+    try:
+        mydb, mycursor = conectar_db()
+
+        # Insertar el usuario en la base de datos
+        sql = "INSERT INTO usuarios (nombre_usuario, contrasena, rol) VALUES (%s, %s, %s)"
+        val = (nombre_usuario, contrasena_hasheada, rol)
+        mycursor.execute(sql, val)
+        mydb.commit()
+
+        print("Usuario registrado correctamente")
+    except mysql.connector.Error as error:
+        print(f"Error al registrar usuario: {error}")
+    finally:
+        if mydb:
+            mydb.close()
+
 def verificar_usuario(nombre_usuario, contrasena):
     try:
-        mycursor = conectar_db()
+        mydb, mycursor = conectar_db()
         sql = "SELECT * FROM Usuarios WHERE nombre_usuario = %s"
         val = (nombre_usuario,)
         mycursor.execute(sql, val)
@@ -33,3 +50,6 @@ def verificar_usuario(nombre_usuario, contrasena):
     except mysql.connector.Error as error:
         print(f"Error al verificar usuario: {error}")
         return None
+    finally:
+        if mydb:
+            mydb.close()

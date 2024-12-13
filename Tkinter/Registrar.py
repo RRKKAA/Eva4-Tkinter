@@ -17,17 +17,20 @@ def registrar():
         return
 
     # Hashear la contraseña
-    hashed_password = Usuarios.hash_password(contrasena)
+    hashed_password = Usuarios.Usuario.hash_password(contrasena)
 
     # Insertar el usuario en la base de datos
-    if BD.registrar_usuario(nombre_usuario, hashed_password, rol):
-        messagebox.showinfo("Éxito", "Usuario registrado correctamente")
-        # Limpiar los campos
-        entry_usuario.delete(0, tk.END)
-        entry_contrasena.delete(0, tk.END)
-        variable.set("")
-    else:
-        messagebox.showerror("Error", "Error al registrar al usuario")
+    try:
+        if BD.registrar_usuario(nombre_usuario, hashed_password, rol):
+            messagebox.showinfo("Éxito", "Usuario registrado correctamente")
+            # ... (limpiar campos)
+            entry_usuario.delete(0, tk.END)
+            entry_contrasena.delete(0, tk.END)
+            variable.set("")
+        else:
+            messagebox.showerror("Error", "Error al registrar al usuario. Por favor, intenta nuevamente.")
+    except Exception as e:
+        messagebox.showerror("Error", f"Ocurrió un error inesperado: {str(e)}")
 
 # ... (resto del código de la ventana, labels, etc.)
 
@@ -59,7 +62,7 @@ combobox_rol.pack()
 boton_registrar = ttk.Button(ventana_registro, text="Registrar", command=registrar)
 boton_registrar.pack()
 
-boton_login = ttk.Button(ventana_registro, text="¿No tienes una cuenta? Registrarte", command=lambda: [ventana_registro.destroy(), Login.ventana_login.mainloop()])
+boton_login = ttk.Button(ventana_registro, text="¿Ya tienes una cuenta? Ingresa aqui", command=lambda: [ventana_registro.destroy(), Login.ventana_login.mainloop()])
 boton_login.pack()
 
 ventana_registro.mainloop()

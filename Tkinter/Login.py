@@ -4,6 +4,7 @@ from tkinter import messagebox
 import Clases.Usuarios as Usuarios
 import SQL.BD as BD
 import Registrar
+import MainAdmin
 
 def login():
     nombre_usuario = entry_usuario.get()
@@ -17,9 +18,14 @@ def login():
 
     if usuario_db:
         usuario_app = Usuarios.Usuario(usuario_db.id, usuario_db.nombre_usuario, usuario_db.contrasena, usuario_db.rol)
-        if usuario_app.rol == 'admin':
+        if usuario_app.rol == 'Administrador':
             messagebox.showinfo("Éxito", "Bienvenido, administrador")
             # se abre la ventana de administrador
+            ventana_admin = tk.Tk()
+            ventana_admin.title("Panel de Administrador")
+            # ... (Código para configurar la ventana de administrador)
+            MainAdmin.iniciar_ventana(ventana_admin)  # Llamamos a la función para iniciar la ventana principal
+            ventana_login.destroy()  # Cerramos la ventana de login
         else:
             messagebox.showinfo("Éxito", f"Bienvenido, {usuario_app.nombre_usuario}")
             # se abre la ventana para trabajadores

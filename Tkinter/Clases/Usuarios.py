@@ -14,6 +14,13 @@ class Usuario:
 
     def verificar_contrasena(self, contrasena_ingresada):
         return bcrypt.checkpw(contrasena_ingresada.encode('utf-8'), self.contrasena.encode('utf-8'))
+    
+    @staticmethod
+    def hash_password(password):
+        """Hashea una contraseña utilizando bcrypt."""
+        salt = bcrypt.gensalt()
+        hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+        return hashed_password
 
     def __str__(self):
         return f"Usuario(id={self.id_usuario}, nombre={self.nombre_usuario}, rol={self.rol})"
