@@ -1,11 +1,12 @@
 import bcrypt
 
 class Usuario:
-    def __init__(self, id, nombre_usuario, contrasena, rol):
+    def __init__(self, id:int, nombre_usuario:str, contrasena:str, rol:str, rut_usuario:str):
         self.id = id
         self.nombre_usuario = nombre_usuario
         self.contrasena = contrasena
         self.rol = rol
+        self.rut_usuario = rut_usuario
 
     def set_contrasena(self, nueva_contrasena):
         # Aplicar algoritmo de hash para encriptar la contraseña

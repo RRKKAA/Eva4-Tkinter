@@ -4,16 +4,16 @@ from tkinter import messagebox
 import Clases.Usuarios as Usuarios
 import SQL.BD as BD
 import Login
-import bcrypt
 
 def registrar():
     nombre_usuario = entry_usuario.get()
     contrasena = entry_contrasena.get()
-    rol = variable.get()  # Obtener el valor seleccionado del combobox
+    rol = variable.get()
+    rut_usuario = entry_rut.get()
 
     # Validar datos (ej: longitud mínima, caracteres permitidos)
-    if not nombre_usuario or not contrasena:
-        messagebox.showerror("Error", "Por favor, ingresa un nombre de usuario y una contraseña.")
+    if not nombre_usuario or not contrasena or not rol or not rut_usuario:
+        messagebox.showerror("Error", "Por favor, complete sus datos.")
         return
 
     # Hashear la contraseña
@@ -21,7 +21,7 @@ def registrar():
 
     # Insertar el usuario en la base de datos
     try:
-        if BD.registrar_usuario(nombre_usuario, hashed_password, rol):
+        if BD.registrar_usuario(nombre_usuario, hashed_password, rol, rut_usuario):
             messagebox.showinfo("Éxito", "Usuario registrado correctamente")
             # ... (limpiar campos)
             entry_usuario.delete(0, tk.END)
@@ -36,7 +36,7 @@ def registrar():
 
 ventana_registro = tk.Tk()
 ventana_registro.title("Registrarse")
-ventana_registro.geometry("300x200")
+ventana_registro.geometry("480x360")
 
 # Crear un combobox para seleccionar el rol
 label_usuario = ttk.Label(ventana_registro, text="Usuario:")
@@ -57,6 +57,11 @@ label_rol = ttk.Label(ventana_registro, text="Rol:")
 label_rol.pack()
 combobox_rol = ttk.Combobox(ventana_registro, textvariable=variable, values=roles)
 combobox_rol.pack()
+
+label_rut = ttk.Label(ventana_registro, text="Rut:")
+label_rut.pack()
+entry_rut = ttk.Entry(ventana_registro)
+entry_rut.pack()
 
 # Botón de registro
 boton_registrar = ttk.Button(ventana_registro, text="Registrar", command=registrar)

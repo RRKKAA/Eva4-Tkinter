@@ -1,5 +1,5 @@
 class Familiar:
-    def __init__(self, nombre, parentesco, sexo, rut, rut_trabajador):
+    def __init__(self, nombre:str, parentesco:str, sexo:str, rut:str, rut_trabajador:str):
         self.nombre = nombre
         self.parentesco = parentesco
         self.sexo = sexo
