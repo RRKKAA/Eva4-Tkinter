@@ -4,6 +4,7 @@ from tkinter import messagebox
 import Clases.Usuarios as Usuarios
 import SQL.BD as BD
 import Registrar
+from Clases.Trabajadores import Trabajador
 
 def login():
     nombre_usuario = entry_usuario.get()
@@ -26,9 +27,14 @@ def login():
 
         elif usuario_app.rol == 'Trabajador':
             rut_trabajador = usuario_db.rut_usuario
-            ventana_login.destroy()
-            import MainTrabajador
-            MainTrabajador.ventana_registro_trabajador(rut_trabajador)
+            trabajador = BD.obtener_trabajador_por_rut(rut_trabajador)
+            if trabajador:
+                messagebox.showinfo("Éxito", f"Bienvenido, {usuario_app.nombre_usuario}")
+                ventana_login.destroy()
+                import MainTrabajador
+                MainTrabajador.ventana_registro_trabajador(rut_trabajador)
+            else: 
+                messagebox.showinfo("Acceso negado", "Todavia no estas asignado, contacta con RR.HH e intente mas tarde")
         else:
             messagebox.showinfo("Éxito", f"Bienvenido, {usuario_app.nombre_usuario}")
             # se abre la ventana para trabajadores
@@ -45,11 +51,13 @@ ventana_login.geometry("300x200")
 label_usuario = ttk.Label(ventana_login, text="Usuario:")
 label_usuario.pack()
 entry_usuario = ttk.Entry(ventana_login)
+entry_usuario.insert(0, "San Juan") ###
 entry_usuario.pack()
 
 label_contrasena = ttk.Label(ventana_login, text="Contraseña:")
 label_contrasena.pack()
 entry_contrasena = ttk.Entry(ventana_login, show="*")
+entry_contrasena.insert(0, "keton") ###
 entry_contrasena.pack()
 
 #botones para iniciar sesion o para ir a registrarce

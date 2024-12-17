@@ -1,37 +1,8 @@
 class Familiar:
-    def __init__(self, nombre:str, parentesco:str, sexo:str, rut:str, rut_trabajador:str):
-        self.nombre = nombre
+    def __init__(self, id_carga:int, nombre_familiar:str, parentesco:str, sexo_familiar:str, rut_familiar:str, rut_2:str):
+        self.id_carga = id_carga
+        self.nombre_familiar = nombre_familiar
         self.parentesco = parentesco
-        self.sexo = sexo
-        self.rut = rut  # Clave primaria
-        self.rut_trabajador = rut_trabajador
-
-    def set_nombre(self, nombre):
-        self.nombre = nombre
-
-    def get_nombre(self):
-        return self.nombre
-    
-    def set_parentesco(self, parentesco):
-        self.parentesco = parentesco
-
-    def get_parentesco(self):
-        return self.parentesco
-    
-    def set_sexo(self, sexo):
-        self.sexo = sexo
-
-    def get_sexo(self):
-        return self.sexo
-    
-    def set_rut(self, rut):
-        self.rut = rut
-
-    def get_rut(self):
-        return self.rut
-    
-    def set_rut_trabajador(self, rut_trabajador):
-        self.rut_trabajador = rut_trabajador
-
-    def get_rut_trabajador(self):
-        return self.rut_trabajador
+        self.sexo_familiar = sexo_familiar
+        self.rut_familiar = rut_familiar
+        self.rut_2 = rut_2
