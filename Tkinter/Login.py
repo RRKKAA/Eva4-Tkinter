@@ -51,13 +51,13 @@ ventana_login.geometry("300x200")
 label_usuario = ttk.Label(ventana_login, text="Usuario:")
 label_usuario.pack()
 entry_usuario = ttk.Entry(ventana_login)
-entry_usuario.insert(0, "San Juan") ###
+entry_usuario.insert(0, "admin") ###
 entry_usuario.pack()
 
 label_contrasena = ttk.Label(ventana_login, text="Contraseña:")
 label_contrasena.pack()
 entry_contrasena = ttk.Entry(ventana_login, show="*")
-entry_contrasena.insert(0, "keton") ###
+entry_contrasena.insert(0, "123") ###
 entry_contrasena.pack()
 
 #botones para iniciar sesion o para ir a registrarce

@@ -134,3 +134,91 @@ ventana_admin.config(menu=menubar)
 
 # Mostrar la ventana
 ventana_admin.mainloop()
+
+def crear_contactos(rut_1):
+    ventana_contactocrear = tk.Toplevel()
+    ventana_contactocrear.title("Crear Nuevo Contacto")
+
+    opciones_relacion = ["Amigo", "Familiar", "Vecino", "Compañero", "Otro"]
+    rut_1 = rut_1
+
+    # Crear los campos del formulario
+    label_nombre_contacto = ttk.Label(ventana_contactocrear, text="Nombre:")
+    label_nombre_contacto.pack()
+    entry_nombre_contacto = ttk.Entry(ventana_contactocrear)
+    entry_nombre_contacto.pack()
+
+    label_relacion = ttk.Label(ventana_contactocrear, text="Relacion:")
+    label_relacion.pack()
+    combobox_relacion = ttk.Combobox(ventana_contactocrear, values=opciones_relacion)
+    combobox_relacion.pack()
+
+    label_telefono_contacto = ttk.Label(ventana_contactocrear, text="Telefono:")
+    label_telefono_contacto.pack()
+    entry_telefono_contacto = ttk.Entry(ventana_contactocrear)
+    entry_telefono_contacto.pack()
+
+    boton_guardar_contacto = ttk.Button(ventana_contactocrear, text="Guardar", command=lambda: crear_contacto(rut_1))
+    boton_guardar_contacto.pack()
+
+    def crear_contacto(rut_1):
+        nombre = entry_nombre_contacto.get()
+        relacion = combobox_relacion.get()
+        telefono = entry_telefono_contacto.get()
+        rut_1 = rut_1
+        
+        # Insertar los datos en la base de datos
+        BD.registrar_contacto(nombre, relacion, telefono, rut_1)  # Ajusta según tu función
+        
+        # Cerrar la ventana modal
+        ventana_contactocrear.destroy()
+        
+        # Mostrar un mensaje de confirmación
+        messagebox.showinfo("Éxito", "Contacto registrado correctamente.")
+
+def crear_familiares(rut_1):
+    ventana_familiarcrear = tk.Toplevel()
+    ventana_familiarcrear.title("Crear Nuevo Familiar")
+
+    opciones_parentesco = ["Padre/Madre", "Abuelo/Abuela", "Hermano/Hermana", "Hijo/Hija", "Tio/Tia", "Suegro/Suegra", "Otro"]
+    rut_1 = rut_1
+
+    # Crear los campos del formulario
+    label_nombre_familiar = ttk.Label(ventana_familiarcrear, text="Nombre:")
+    label_nombre_familiar.pack()
+    entry_nombre_contacto = ttk.Entry(ventana_familiarcrear)
+    entry_nombre_contacto.pack()
+
+    label_parentesco = ttk.Label(ventana_familiarcrear, text="Parentesco:")
+    label_parentesco.pack()
+    combobox_parentesco = ttk.Combobox(ventana_familiarcrear, values=opciones_parentesco)
+    combobox_parentesco.pack()
+
+    label_sexo_familiar = ttk.Label(ventana_familiarcrear, text="Sexo:")
+    label_sexo_familiar.pack()
+    combobox_sexo_familiar = ttk.Combobox(ventana_familiarcrear, values=opciones_parentesco)
+    combobox_sexo_familiar.pack()
+
+    label_rut_familiar = ttk.Label(ventana_familiarcrear, text="RUT:")
+    label_rut_familiar.pack()
+    entry_rut_familiar = ttk.Entry(ventana_familiarcrear)
+    entry_rut_familiar.pack()
+
+    boton_guardar_familiar = ttk.Button(ventana_familiarcrear, text="Guardar", command=lambda: crear_familiar(rut_1))
+    boton_guardar_familiar.pack()
+
+    def crear_familiar(rut_1):
+        nombre = entry_nombre_contacto.get()
+        parentesco = combobox_parentesco.get()
+        sexo = combobox_sexo_familiar.get()
+        rut = entry_rut_familiar.get()
+        rut_2 = rut_1
+        
+        # Insertar los datos en la base de datos
+        BD.registrar_familiar(nombre, parentesco, sexo, rut, rut_2)  # Ajusta según tu función
+        
+        # Cerrar la ventana modal
+        ventana_familiarcrear.destroy()
+        
+        # Mostrar un mensaje de confirmación
+        messagebox.showinfo("Éxito", "Familiar registrado correctamente.")

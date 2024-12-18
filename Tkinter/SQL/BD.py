@@ -199,6 +199,25 @@ def obtener_contactos_por_rut(rut_1):
         if mydb:
             mydb.close()
 
+def obtener_contacto_por_id(id_contacto):
+    try:
+        mydb, mycursor = conectar_db()
+        sql = "SELECT * FROM contactos WHERE id_contacto = %s"
+        val = (id_contacto,)
+        mycursor.execute(sql, val)
+        resultado = mycursor.fetchone()
+        if resultado:
+            contacto = Contacto(resultado[0], resultado[1], resultado[2], resultado[3], resultado[4])
+            return contacto
+        else:
+            return None
+    except mysql.connector.Error as error:
+        print(f"Error al obtener el contacto: {error}")
+        return None
+    finally:
+        if mydb:
+            mydb.close()
+
 def actualizar_contacto(id_contacto, nombre_contacto, relacion, telefono_contacto):
     try:
         mydb, mycursor = conectar_db()
@@ -216,7 +235,7 @@ def actualizar_contacto(id_contacto, nombre_contacto, relacion, telefono_contact
 def eliminar_contacto(id_contacto):
     try:
         mydb, mycursor = conectar_db()
-        sql = "DELETE FROM contactos WHERE id=%s"
+        sql = "DELETE FROM contactos WHERE id_contacto=%s"
         val = (id_contacto,)
         mycursor.execute(sql, val)
         mydb.commit()
@@ -261,6 +280,25 @@ def obtener_familiares_por_rut(rut_1):
     except mysql.connector.Error as error:
         print(f"Error al obtener los contactos: {error}")
         return []
+    finally:
+        if mydb:
+            mydb.close()
+
+def obtener_familiar_por_id(id_carga):
+    try:
+        mydb, mycursor = conectar_db()
+        sql = "SELECT * FROM familiares WHERE id_carga = %s"
+        val = (id_carga,)
+        mycursor.execute(sql, val)
+        resultado = mycursor.fetchone()
+        if resultado:
+            familiar = Familiar(resultado[0], resultado[1], resultado[2], resultado[3], resultado[4], resultado[5])
+            return familiar
+        else:
+            return None
+    except mysql.connector.Error as error:
+        print(f"Error al obtener el familiar: {error}")
+        return None
     finally:
         if mydb:
             mydb.close()

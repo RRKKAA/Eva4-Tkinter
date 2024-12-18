@@ -6,7 +6,7 @@ import SQL.BD as BD
 def ventana_registro_trabajador(rut_trabajador):
     # Crear la ventana y los elementos del formulario (similar a ventana_registro)
     ventana_trabajador = tk.Tk()
-    ventana_trabajador.title("Datos del Trabajador")
+    ventana_trabajador.title("El Correo de Yury: Datos del Trabajador")
 
     rut_trabajador = rut_trabajador
 
@@ -18,27 +18,80 @@ def ventana_registro_trabajador(rut_trabajador):
     notebook.pack(fill="both", expand=True)
 
     tab_contactos = ttk.Frame(notebook)
-    tabla_contactos = ttk.Treeview(tab_contactos, columns=("Nombre", "Telefono", "Relación"))
-    #tabla_contactos.heading("Nombre", text="Nombre")
-    #tabla_contactos.heading("Teléfono", text="Teléfono")
-    #tabla_contactos.heading("Relación", text="Relación")
-    # ... (configurar tabla de contactos)
-    tabla_contactos.pack(fill="both", expand=True)
-
-    # Poblar la tabla
-    for contacto in contactos:
-        tabla_contactos.insert("", "end", values=(contacto.nombre_contacto, contacto.telefono_contacto, contacto.relacion))
-    # ... (botones para agregar, editar, eliminar contactos)
-    notebook.add(tab_contactos, text="Contactos")
-
     tab_familiares = ttk.Frame(notebook)
-    tabla_familiares = ttk.Treeview(tab_contactos, columns= ("Nombre", "Parentesco", "Sexo", "Rut"))
-    tabla_familiares.pack(fill="both", expand=True)
 
-    for familiar in familiares:
-        tabla_familiares.insert("", "end", values=(familiar.nombre_familiar, familiar.parentesco, familiar.sexo_familiar, familiar.rut_familiar))
-    # ... (botones para agregar, editar, eliminar contactos)
+    notebook.add(tab_contactos, text="Contactos")
     notebook.add(tab_familiares, text="Familiares")
+
+    def mostrar_tabla_contactos(contactos):
+        tabla_contactos = ttk.Treeview(tab_contactos, columns=("ID", "Nombre", "Teléfono", "Relación"))
+        tabla_contactos.heading("ID", text="ID")
+        tabla_contactos.heading("Nombre", text="Nombre")
+        tabla_contactos.heading("Teléfono", text="Teléfono")
+        tabla_contactos.heading("Relación", text="Relación")
+        tabla_contactos.pack(fill="both", expand=True)
+
+        for contacto in contactos:
+            tabla_contactos.insert("", "end", values=(contacto.id_contacto, contacto.nombre_contacto, contacto.telefono_contacto, contacto.relacion))
+
+        def mostrar_menu_contexto_contacto(event):
+            # Obtener el item seleccionado
+            item = tabla_contactos.identify('item', event.x, event.y)
+            if item:
+                # Obtener el ID del contacto
+                id_contacto = tabla_contactos.item(item)['values'][0]
+
+                # Crear el menú contextual
+                menu_contexto = tk.Menu(tabla_contactos, tearoff=0)
+                menu_contexto.add_command(label="Editar", command=lambda: editar_contacto(id_contacto))
+                menu_contexto.add_command(label="Eliminar", command=lambda: eliminar_contacto(id_contacto))
+
+                # Mostrar el menú en la posición del clic
+                menu_contexto.post(event.x_root, event.y_root)
+
+        tabla_contactos.bind("<Button-3>", mostrar_menu_contexto_contacto)
+
+        # Agregar menú contextual para editar y eliminar
+        #def mostrar_menu_contexto_contacto(event):
+            # ... (código para mostrar el menú contextual, como en la respuesta anterior)
+
+        #tabla_contactos.bind("<Button-3>", mostrar_menu_contexto_contacto)
+    # ... (botones para agregar, editar, eliminar contactos)
+
+    def mostrar_tabla_familiares(familiares):
+        tabla_familiares = ttk.Treeview(tab_familiares, columns= ("ID", "Nombre", "Parentesco", "Sexo", "Rut"))
+        tabla_familiares.heading("ID", text="ID")
+        tabla_familiares.heading("Nombre", text="Nombre")
+        tabla_familiares.heading("Parentesco", text="Parentesco")
+        tabla_familiares.heading("Sexo", text="Sexo")
+        tabla_familiares.heading("Rut", text="Rut")
+        tabla_familiares.pack(fill="both", expand=True)
+
+        for familiar in familiares:
+            tabla_familiares.insert("", "end", values=(familiar.id_carga, familiar.nombre_familiar, familiar.parentesco, familiar.sexo_familiar, familiar.rut_familiar))
+
+        def mostrar_menu_contexto_familiar(event):
+            # Obtener el item seleccionado
+            item = tabla_familiares.identify('item', event.x, event.y)
+            if item:
+                # Obtener el ID del contacto
+                id_carga = tabla_familiares.item(item)['values'][0]
+
+                # Crear el menú contextual
+                menu_familiar = tk.Menu(tabla_familiares, tearoff=0)
+                menu_familiar.add_command(label="Editar", command=lambda: editar_familiar(id_carga))
+                menu_familiar.add_command(label="Eliminar", command=lambda: eliminar_familiar(id_carga))
+
+                # Mostrar el menú en la posición del clic
+                menu_familiar.post(event.x_root, event.y_root)
+
+        tabla_familiares.bind("<Button-3>", mostrar_menu_contexto_familiar)
+
+        
+    # ... (botones para agregar, editar, eliminar contactos)
+
+    mostrar_tabla_contactos(contactos)
+    mostrar_tabla_familiares(familiares)
 
 
     datos_trabajador = vars(trabajador)
@@ -174,6 +227,53 @@ def crear_contactos(rut_1):
         # Mostrar un mensaje de confirmación
         messagebox.showinfo("Éxito", "Contacto registrado correctamente.")
 
+def editar_contacto(id_contacto):
+    contacto = BD.obtener_contacto_por_id(id_contacto)
+
+    ventana_editar_contacto = tk.Toplevel()
+    ventana_editar_contacto.title("Editar Contacto")
+    opciones_relacion = ["Amigo", "Familiar", "Vecino", "Compañero", "Otro"]
+
+    label_nombre_contacto = ttk.Label(ventana_editar_contacto, text="Nombre:")
+    label_nombre_contacto.pack()
+    entry_nombre_contacto = ttk.Entry(ventana_editar_contacto)
+    entry_nombre_contacto.insert(0, contacto.nombre_contacto)
+    entry_nombre_contacto.pack()
+
+    label_relacion_contacto = ttk.Label(ventana_editar_contacto, text="Relacion:")
+    label_relacion_contacto.pack()
+    combobox_relacion_contacto = ttk.Combobox(ventana_editar_contacto, values=opciones_relacion)
+    combobox_relacion_contacto.insert(0, contacto.nombre_contacto)
+    combobox_relacion_contacto.pack()
+
+    label_telefono_contacto = ttk.Label(ventana_editar_contacto, text="Contacto:")
+    label_telefono_contacto.pack()
+    entry_telefono_contacto = ttk.Entry(ventana_editar_contacto)
+    entry_telefono_contacto.insert(0, contacto.nombre_contacto)
+    entry_telefono_contacto.pack()
+
+    guardar_btn = ttk.Button(ventana_editar_contacto, text="Guardar", command=lambda: guardar_cambios_contacto)
+    guardar_btn.pack()
+
+    def guardar_cambios_contacto():
+        id = id_contacto
+        nuevo_nombre = entry_nombre_contacto.get()
+        nuevo_telefono = entry_telefono_contacto.get()
+        nueva_relacion = combobox_relacion_contacto.get()
+
+        BD.actualizar_contacto(id, nuevo_nombre, nuevo_telefono, nueva_relacion)
+        messagebox.showinfo("Exito", "El contacto se actualizo con exito")
+
+        ventana_editar_contacto.destroy()
+
+def eliminar_contacto(id_contacto):
+    print(id_contacto)
+    if messagebox.askyesno("Confirmar", "¿Estás seguro de eliminar este contacto?"):
+        BD.eliminar_contacto(id_contacto)
+        # Actualizar la tabla de contactos (llamar a mostrar_tabla_contactos nuevamente)
+
+
+
 def crear_familiares(rut_1):
     ventana_familiarcrear = tk.Toplevel()
     ventana_familiarcrear.title("Crear Nuevo Familiar")
@@ -222,6 +322,55 @@ def crear_familiares(rut_1):
         messagebox.showinfo("Éxito", "Familiar registrado correctamente.")
     
 
-#def ver_familiares():
-    # Crear una nueva ventana para mostrar los familiares
-    # ... (implementar la lógica para mostrar, agregar, modificar y eliminar familiares)
+def editar_familiar(id_familiar):
+    familiar = BD.obtener_familiar_por_id(id_familiar)
+
+    ventana_editar_familiar = tk.Toplevel()
+    ventana_editar_familiar.title("Editar Contacto")
+    opciones_parentesco = ["Amigo", "Familiar", "Vecino", "Compañero", "Otro"]
+    opciones_sexo = ["Hombre", "Mujer", "Otro"]
+
+    label_nombre_familiar = ttk.Label(ventana_editar_familiar, text="Nombre:")
+    label_nombre_familiar.pack()
+    entry_nombre_familiar = ttk.Entry(ventana_editar_familiar)
+    entry_nombre_familiar.insert(0, familiar.nombre_familiar)
+    entry_nombre_familiar.pack()
+
+    label_parentesco_familiar = ttk.Label(ventana_editar_familiar, text="Parentesco:")
+    label_parentesco_familiar.pack()
+    combobox_parentesco_familiar = ttk.Combobox(ventana_editar_familiar, values=opciones_parentesco)
+    combobox_parentesco_familiar.insert(0, familiar.parentesco)
+    combobox_parentesco_familiar.pack()
+
+    label_sexo_familiar = ttk.Label(ventana_editar_familiar, text="Parentesco:")
+    label_sexo_familiar.pack()
+    combobox_sexo_familiar = ttk.Combobox(ventana_editar_familiar, values=opciones_sexo)
+    combobox_sexo_familiar.insert(0, familiar.sexo_familiar)
+    combobox_sexo_familiar.pack()
+
+    label_rut_familiar = ttk.Label(ventana_editar_familiar, text="Contacto:")
+    label_rut_familiar.pack()
+    entry_rut_familiar = ttk.Entry(ventana_editar_familiar)
+    entry_rut_familiar.insert(0, familiar.rut_familiar)
+    entry_rut_familiar.pack()
+
+    guardar_btn = ttk.Button(ventana_editar_familiar, text="Guardar", command=lambda: guardar_cambios_familiar)
+    guardar_btn.pack()
+
+    def guardar_cambios_familiar():
+        id = id_familiar
+        nombre = entry_nombre_familiar.get()
+        parentesco = combobox_parentesco_familiar.get()
+        sexo = combobox_sexo_familiar.get()
+        rut = entry_rut_familiar.get()
+        
+
+        BD.actualizar_contacto(id, nombre, parentesco, sexo, rut)
+        messagebox.showinfo("Exito", "El familiar se actualizo con exito")
+
+        ventana_editar_familiar.destroy()
+
+def eliminar_familiar(id_carga):
+    print(id_carga)
+    if messagebox.askyesno("Confirmar", "¿Estás seguro de eliminar este familiar?"):
+        BD.eliminar_contacto(id_carga)
