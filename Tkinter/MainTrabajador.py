@@ -374,3 +374,5 @@ def eliminar_familiar(id_carga):
     print(id_carga)
     if messagebox.askyesno("Confirmar", "¿Estás seguro de eliminar este familiar?"):
         BD.eliminar_contacto(id_carga)
+
+

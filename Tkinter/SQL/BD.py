@@ -109,11 +109,30 @@ def obtener_trabajador_por_rut(rut):
             return trabajador
         else:
             return None
-            
         
     except mysql.connector.Error as error:
         print(f"Error al obtener los trabajadores: {error}")
         return []
+    finally:
+        if mydb:
+            mydb.close()
+
+def ejecutar_consulta(consulta, parametros):
+    try:
+        mydb, mycursor = conectar_db()
+        mycursor = mydb.cursor()
+        #sql = consulta
+        val = [*parametros,]
+        mycursor.execute(consulta,val)
+        resultados = mycursor.fetchall()
+        trabajadores = []
+        for row in resultados:
+            trabajador = Trabajador(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9])
+            trabajadores.append(trabajador)
+
+        return trabajadores
+    except mysql.connector.Error as error:
+        print(f"Error al registrar usuario: {error}")
     finally:
         if mydb:
             mydb.close()
